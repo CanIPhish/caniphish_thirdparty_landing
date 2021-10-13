@@ -1,54 +1,47 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
+    const REDIRECT_TO = 'https://example.com'; // The destination URL once data has been submitted
+
+    var responseEndpoint = "https://awo0vrpjg3.execute-api.ap-southeast-2.amazonaws.com/default/caniphish-phish-response";
     var signInCalled = false;
     function signIn() {
-        uri = "https://awo0vrpjg3.execute-api.ap-southeast-2.amazonaws.com/default/caniphish-phish-response" + document.location.search + "&webClick=true";
+        uri = responseEndpoint + document.location.search + "&webClick=true";
         console.log(uri);
         if (signInCalled === false) {
             $.ajax({
                 url: uri,
                 type: 'GET',
-                dataType: "jsonp",
-                success: function (response) {
+                dataType: 'jsonp',
+                complete: function (response) {
                     console.log(response); // server response
+                    redirectPage();
                 }
-
             });
             signInCalled = true;
         }
-        var redirectUri = '../index.html';
+    }
 
+    function redirectPage() {
         const urlParams = new URLSearchParams(document.location.search);
-        console.log(urlParams);
         const myParam = urlParams.get('t');
-        console.log(myParam);
         var decodedString = atob(myParam);
-        console.log(decodedString);
         var parsedQuery = parseQuery(decodedString);
-        console.log(parsedQuery.eType);
         var decodedEducation = parsedQuery.eType;
         var decodedURL = parsedQuery.eURL;
-        console.log(decodedURL);
         if (decodedEducation == "CanIPhish") {
             redirectUri = "../index.html";
-            window.location.href = redirectUri
-        }
-        else if (decodedEducation == "BYO") {
+        } else if (decodedEducation == "BYO") {
             if (decodedURL.indexOf("http://") == 0 || decodedURL.indexOf("https://") == 0) {
                 redirectUri = decodedURL;
-            }
-            else {
+            } else {
                 redirectUri = "https://" + decodedURL;
             }
-            window.location.href = redirectUri
+        } else if (decodedEducation == "NONE") {
+            redirectUri = REDIRECT_TO;
+        } else {
+            console.log(`Got decodedEducation: ${decodedEducation} ... and redirectUri: ${redirectUri}`);
         }
-        else if (decodedEducation == "NONE") {
-            redirectUri = "/";
-        }
-        else {
-            console.log(redirectUri);
-            window.location.href = redirectUri
-        }
+        window.location.href = redirectUri;
     }
 
     function parseQuery(queryString) {
@@ -63,17 +56,19 @@
 </script>
 <script>
     $(document).ready(function () {
-        uri = "https://awo0vrpjg3.execute-api.ap-southeast-2.amazonaws.com/default/caniphish-phish-response" + document.location.search;
+        uri = responseEndpoint + document.location.search;
         console.log(uri);
 
         $.ajax({
             url: uri,
             type: 'GET',
-            dataType: "jsonp",
+            dataType: 'jsonp',
             success: function (response) {
                 console.log(response); // server response
+            },
+            error: function (response) {
+                console.error("Got error during first callback: " + response);
             }
-
         });
     });
 </script>
