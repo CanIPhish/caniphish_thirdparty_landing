@@ -1,0 +1,79 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    var signInCalled = false;
+    function signIn() {
+        uri = "https://awo0vrpjg3.execute-api.ap-southeast-2.amazonaws.com/default/caniphish-phish-response" + document.location.search + "&webClick=true";
+        console.log(uri);
+        if (signInCalled === false) {
+            $.ajax({
+                url: uri,
+                type: 'GET',
+                dataType: "jsonp",
+                success: function (response) {
+                    console.log(response); // server response
+                }
+
+            });
+            signInCalled = true;
+        }
+        var redirectUri = '../index.html';
+
+        const urlParams = new URLSearchParams(document.location.search);
+        console.log(urlParams);
+        const myParam = urlParams.get('t');
+        console.log(myParam);
+        var decodedString = atob(myParam);
+        console.log(decodedString);
+        var parsedQuery = parseQuery(decodedString);
+        console.log(parsedQuery.eType);
+        var decodedEducation = parsedQuery.eType;
+        var decodedURL = parsedQuery.eURL;
+        console.log(decodedURL);
+        if (decodedEducation == "CanIPhish") {
+            redirectUri = "../index.html";
+            window.location.href = redirectUri
+        }
+        else if (decodedEducation == "BYO") {
+            if (decodedURL.indexOf("http://") == 0 || decodedURL.indexOf("https://") == 0) {
+                redirectUri = decodedURL;
+            }
+            else {
+                redirectUri = "https://" + decodedURL;
+            }
+            window.location.href = redirectUri
+        }
+        else if (decodedEducation == "NONE") {
+            redirectUri = "/";
+        }
+        else {
+            console.log(redirectUri);
+            window.location.href = redirectUri
+        }
+    }
+
+    function parseQuery(queryString) {
+        var query = {};
+        var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i].split('=');
+            query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+        }
+        return query;
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        uri = "https://awo0vrpjg3.execute-api.ap-southeast-2.amazonaws.com/default/caniphish-phish-response" + document.location.search;
+        console.log(uri);
+
+        $.ajax({
+            url: uri,
+            type: 'GET',
+            dataType: "jsonp",
+            success: function (response) {
+                console.log(response); // server response
+            }
+
+        });
+    });
+</script>
