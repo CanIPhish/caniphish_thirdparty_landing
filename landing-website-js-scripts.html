@@ -29,7 +29,7 @@
         var decodedEducation = parsedQuery.eType;
         var decodedURL = parsedQuery.eURL;
         if (decodedEducation == "CanIPhish") {
-            redirectUri = "../index.html";
+            redirectUri = "../index";
         } else if (decodedEducation == "BYO") {
             if (decodedURL.indexOf("http://") == 0 || decodedURL.indexOf("https://") == 0) {
                 redirectUri = decodedURL;
