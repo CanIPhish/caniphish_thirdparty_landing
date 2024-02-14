@@ -5,7 +5,7 @@
     var responseEndpoint = "https://awo0vrpjg3.execute-api.ap-southeast-2.amazonaws.com/default/caniphish-phish-response";
     var signInCalled = false;
     function signIn() {
-        uri = responseEndpoint + document.location.search + "&webClick=true";
+        uri = responseEndpoint + document.location.search + "&webClick=true&callback=myFunction";
         console.log(uri);
         if (signInCalled === false) {
             $.ajax({
