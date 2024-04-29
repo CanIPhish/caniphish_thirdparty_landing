@@ -22,27 +22,31 @@
     }
 
     function redirectPage() {
-        var redirectUri = "../index" + document.location.search;
-        const urlParams = new URLSearchParams(document.location.search);
-        const myParam = urlParams.get('t');
-        var decodedString = atob(myParam);
-        var parsedQuery = parseQuery(decodedString);
-        var decodedEducation = parsedQuery.eType;
-        var decodedURL = parsedQuery.eURL;
-        if (decodedEducation == "CanIPhish") {
-            redirectUri = "../index";
-        } else if (decodedEducation == "BYO") {
-            if (decodedURL.indexOf("http://") == 0 || decodedURL.indexOf("https://") == 0) {
-                redirectUri = decodedURL;
-            } else {
-                redirectUri = "https://" + decodedURL;
-            }
-        } else if (decodedEducation == "NONE") {
-            redirectUri = REDIRECT_TO;
-        } else {
-            console.log(`Got decodedEducation: ${decodedEducation} ... and redirectUri: ${redirectUri}`);
-        }
-        window.location.href = redirectUri;
+        //HARDCODED REDIRECTION SPECIFIED USING THE REDIRECT_TO VARIABLE - COMMENT OUT IF USING CAMPAIGN REDIRECTION
+		window.location.href = REDIRECT_TO;
+		
+		//UNCOMMENT IF YOU WANT TO USE REDIRECTION LOGIC SPECIFIED WITHIN PHISHING CAMPAIGNS
+        //var redirectUri = "../index" + document.location.search;
+        //const urlParams = new URLSearchParams(document.location.search);
+        //const myParam = urlParams.get('t');
+        //var decodedString = atob(myParam);
+        //var parsedQuery = parseQuery(decodedString);
+        //var decodedEducation = parsedQuery.eType;
+        //var decodedURL = parsedQuery.eURL;
+        //if (decodedEducation == "CanIPhish") {
+        //    redirectUri = "../index" + document.location.search;
+        //} else if (decodedEducation == "BYO") {
+        //    if (decodedURL.indexOf("http://") == 0 || decodedURL.indexOf("https://") == 0) {
+        //        redirectUri = decodedURL;
+        //    } else {
+        //        redirectUri = "https://" + decodedURL;
+        //    }
+        //} else if (decodedEducation == "NONE") {
+        //    redirectUri = REDIRECT_TO;
+        //} else {
+        //    console.log(`Got decodedEducation: ${decodedEducation} ... and redirectUri: ${redirectUri}`);
+        //}
+        //window.location.href = redirectUri;
     }
 
     function parseQuery(queryString) {
